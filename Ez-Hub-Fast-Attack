@@ -1,0 +1,53 @@
+getgenv()._FastAttackBackup = getgenv()._FastAttackBackup or {}
+if not getgenv().attackMelee then
+    for _, v in next, getgc(true) do
+        if typeof(v) == "function"
+            and debug.getinfo(v).name == "attackMelee"
+        then
+            getgenv().attackMelee = v
+            break
+        end
+    end
+end
+local Players = game:GetService("Players")
+local VIM = game:GetService("VirtualInputManager")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local WeaponData = require(ReplicatedStorage.Modules.WeaponData)
+task.spawn(function()
+    repeat
+        task.wait()
+    until getgenv().attackMelee
+    while task.wait() do
+        if getgenv().FastAttackNew then
+            pcall(function()
+                local Player = Players.LocalPlayer
+                local Char = Player.Character
+                if not Char then return end
+                local Tool = Char:FindFirstChildOfClass("Tool")
+                if not Tool then return end
+                local WeaponName = Tool:GetAttribute("WeaponName")
+                if not WeaponData[WeaponName] then return end
+                if not getgenv()._FastAttackBackup.Hitbox then
+                    getgenv()._FastAttackBackup.Hitbox = WeaponData[WeaponName].HitboxMagnitude
+                end
+                for i, v in next, getupvalues(getgenv().attackMelee) do
+                    if typeof(v) == "number" then
+                        setupvalue(getgenv().attackMelee, i, 0)
+                    elseif typeof(v) == "boolean" then
+                        setupvalue(getgenv().attackMelee, i, false)
+                    end
+                end
+                WeaponData[WeaponName].HitboxMagnitude = 120
+                VIM:SendMouseButtonEvent(0, 0, 0, true, game, 0)
+                VIM:SendMouseButtonEvent(0, 0, 0, false, game, 0)
+                getgenv().attackMelee()
+            end)
+        end
+    end
+end)
+
+--code make by hiru hub team--
+---lõ quá bỏ chịu---
+
+
+<@>

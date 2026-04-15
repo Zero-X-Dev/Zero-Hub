@@ -1,4 +1,4 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/erenxkuki/KuKi-Hub/refs/heads/main/KuKi-Hub-Fast-Attack-Max.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Zero-X-Dev/Zero-Hub/refs/heads/main/Zero-Hub-Fast-Attack-Max.lua"))()
 local function GetBladeHits()
     local targets = {}
     local function GetDistance(v)

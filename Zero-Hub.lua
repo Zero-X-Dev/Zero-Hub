@@ -120,8 +120,8 @@ end)
 
 
 local currcolor = {}
-local Library = {};
-local Library_Function = {}
+Library = {};
+Library_Function = {}
 local TweenService = game:GetService('TweenService')
 local uis = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
@@ -3779,6 +3779,127 @@ local Window = Library:CreateWindow({
     SaveFolder = "ZeroHub.json",
     Image = "rbxassetid://140318122086207"
 })
+
+-- ===== HIDE BUTTON CODE START =====
+local btnHide = Instance.new('ImageButton', Library_Function.HideGui)
+btnHide.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+btnHide.BackgroundTransparency = 0
+btnHide.AnchorPoint = Vector2.new(0, 1)
+btnHide.Size = UDim2.new(0, 60, 0, 60)
+btnHide.Position = UDim2.new(0, 15, 1, -15)
+btnHide.Image = "rbxassetid://140318122086207"
+btnHide.ScaleType = Enum.ScaleType.Fit
+btnHide.ImageColor3 = Color3.fromRGB(255, 255, 255)
+btnHide.ClipsDescendants = true
+
+local UICornerBtnHide = Instance.new("UICorner")
+UICornerBtnHide.Parent = btnHide
+UICornerBtnHide.CornerRadius = UDim.new(1, 0)
+
+local btnStroke = Instance.new("UIStroke")
+btnStroke.Parent = btnHide
+btnStroke.Color = Color3.fromRGB(200, 200, 200)
+btnStroke.Thickness = 2
+
+local btnHideFrame = Instance.new('Frame', btnHide)
+btnHideFrame.AnchorPoint = Vector2.new(0, 1)
+btnHideFrame.Size = UDim2.new(0, 0, 0, 0)
+btnHideFrame.Position = UDim2.new(0, 0, 1, 0)
+btnHideFrame.Name = "dut dit"
+btnHideFrame.BackgroundTransparency = 1
+
+local imgHide = Instance.new('ImageLabel', btnHide)
+imgHide.AnchorPoint = Vector2.new(0.5, 0.5)
+imgHide.Image = ""
+imgHide.BackgroundTransparency = 1
+imgHide.Size = UDim2.new(0, 0, 0, 0)
+imgHide.Position = UDim2.new(0.5, 0, 0.5, 0)
+
+Library.ToggleUI = function()
+    getgenv().UIToggled = not getgenv().UIToggled
+    if game.CoreGui:FindFirstChild("Zero Hub GUI") then
+        for a, b in ipairs(game.CoreGui:GetChildren()) do
+            if b.Name == "Zero Hub GUI" then
+                b.Enabled = getgenv().UIToggled
+            end
+        end
+    end
+end
+
+Library.DestroyUI = function()
+    if game.CoreGui:FindFirstChild("Zero Hub GUI") then
+        for i, v in ipairs(game.CoreGui:GetChildren()) do
+            if string.find(v.Name, "Zero Hub") then
+                v:Destroy()
+            end
+        end
+    end
+end
+
+if true then
+    local button = btnHide
+    local UIS = game:GetService("UserInputService")
+    
+    local dragging = false
+    local dragInput, dragStart, startPos
+    local holdTime = 0.1
+    local holdStarted = 0
+    
+    local function update(input)
+        local delta = input.Position - dragStart
+        button.Position = UDim2.new(
+            startPos.X.Scale, startPos.X.Offset + delta.X,
+            startPos.Y.Scale, startPos.Y.Offset + delta.Y
+        )
+    end
+    
+    local function onInputBegan(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            holdStarted = tick()
+            dragStart = input.Position
+            startPos = button.Position
+    
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                    holdStarted = 0
+                end
+            end)
+        end
+    end
+    
+    local function onInputEnded(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+            holdStarted = 0
+        end
+    end
+    
+    local function onInputChanged(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end
+    
+    button.InputBegan:Connect(onInputBegan)
+    button.InputEnded:Connect(onInputEnded)
+    button.InputChanged:Connect(onInputChanged)
+    
+    RunService.RenderStepped:Connect(function()
+        if holdStarted > 0 and (tick() - holdStarted >= holdTime) and not dragging then
+            dragging = true
+        end
+    
+        if dragging and dragInput then
+            update(dragInput)
+        end
+    end)
+end
+
+btnHide.MouseButton1Click:Connect(function() 
+    Library.ToggleUI()
+end)
+-- ===== HIDE BUTTON CODE END =====
 
 local InfoTab = Window:AddTab("Discord")
 local ServerTab = Window:AddTab("Status and Server")

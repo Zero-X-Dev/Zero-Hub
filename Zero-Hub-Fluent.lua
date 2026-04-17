@@ -700,7 +700,7 @@ local Window = Fluent:CreateWindow({
     Acrylic = false,
     Theme = "Dark",
     MinimizeKey = Enum.KeyCode.End,
-    Logo = "rbxassetid://140318122086207"
+    Logo = "rbxassetid://73815774557594"
 })
 
 local CoreGui = game:GetService("CoreGui")
